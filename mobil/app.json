@@ -1,29 +1,71 @@
 {
   "expo": {
-    "name": "mobil",
-    "slug": "mobil",
+    "name": "Video Şiddet Analizi",
+    "slug": "video-violence-detection",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "description": "AI destekli video şiddet tespit uygulaması",
+    "platforms": ["ios", "android"],
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#007AFF"
     },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.videviolencedetection",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Bu uygulama video analizi için kameraya erişim gerektirir.",
+        "NSPhotoLibraryUsageDescription": "Bu uygulama video seçimi için fotoğraf galerisine erişim gerektirir.",
+        "NSMicrophoneUsageDescription": "Bu uygulama video kayıtları için mikrofona erişim gerektirir."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#007AFF"
       },
+      "package": "com.yourcompany.videviolencedetection",
+      "versionCode": 1,
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA",
+        "RECORD_AUDIO",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
       "edgeToEdgeEnabled": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "name": "Video Şiddet Analizi",
+      "shortName": "Video Analiz",
+      "lang": "tr",
+      "scope": "/",
+      "themeColor": "#007AFF",
+      "backgroundColor": "#ffffff",
+      "display": "standalone",
+      "orientation": "portrait",
+      "startUrl": "/"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Bu uygulama video seçimi için fotoğraf galerisine erişim gerektirir.",
+          "cameraPermission": "Bu uygulama video kayıtları için kameraya erişim gerektirir."
+        }
+      ],
+      ["expo-av"]
+    ]
   }
 }
