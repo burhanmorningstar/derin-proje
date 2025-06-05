@@ -25,6 +25,7 @@ export default function App() {
   const [predictions, setPredictions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
+  const [expandedPredictions, setExpandedPredictions] = useState({});
   
   const videoRef = useRef(null);
 
@@ -228,20 +229,91 @@ export default function App() {
 
       {/* Predictions List */}
       <View style={styles.predictionsContainer}>
-        <Text style={styles.predictionsTitle}>
-          Prediction Sonuçları ({predictions.length})
-        </Text>
-        
+  <Text style={styles.predictionsTitle}>
+    Prediction Sonuçları ({predictions.length})
+  </Text>
+  
         <ScrollView style={styles.predictionsList}>
-          {predictions.map((prediction) => (
-            <View key={prediction.id} style={styles.predictionItem}>
-              <Text style={styles.predictionTime}>{prediction.timestamp}</Text>
-              <Text style={styles.predictionResult}>
-                {JSON.stringify(prediction.result, null, 2)}
-              </Text>
-            </View>
-          ))}
-          
+          {predictions.map((prediction) => {
+            const result = prediction.result;
+            const predLabel = result?.prediction || '';
+            const violenceProb = result?.violence_prob ?? 0;
+            const nonviolenceProb = result?.nonviolence_prob ?? 0;
+
+            const isViolence = predLabel === 'Violence';
+            const confidence = isViolence
+              ? Math.round(violenceProb * 100)
+              : Math.round(nonviolenceProb * 100);
+            const cardStyle = [
+              styles.predictionItem,
+              isViolence
+                ? { borderLeftColor: '#D90429', backgroundColor: '#ffd6d6' }
+                : { borderLeftColor: '#23C552', backgroundColor: '#dafad7' },
+            ];
+
+            const isExpanded = expandedPredictions[prediction.id];
+
+            return (
+              <View key={prediction.id} style={cardStyle}>
+                <Text style={styles.predictionTime}>{prediction.timestamp}</Text>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: isViolence ? '#D90429' : '#23C552',
+                    marginBottom: 2,
+                  }}>
+                  {isViolence ? 'ŞİDDET' : 'ŞİDDET YOK'}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: isViolence ? '#a10014' : '#168a31',
+                    marginBottom: 2,
+                    fontWeight: '500',
+                  }}>
+                  Eminlik: %{confidence}
+                </Text>
+                <Text style={{
+                  fontSize: 12,
+                  color: '#666',
+                  marginBottom: 4,
+                }}>
+                  Violence: %{Math.round(violenceProb * 100)} | NonViolence: %{Math.round(nonviolenceProb * 100)}
+                </Text>
+                <TouchableOpacity
+                  style={{ paddingVertical: 6 }}
+                  onPress={() =>
+                    setExpandedPredictions((prev) => ({
+                      ...prev,
+                      [prediction.id]: !prev[prediction.id],
+                    }))
+                  }
+                >
+                  <Text style={{ color: '#007AFF', fontSize: 13, fontWeight: 'bold' }}>
+                    {isExpanded ? 'Detayları Gizle ▲' : 'Detayları Göster ▼'}
+                  </Text>
+                </TouchableOpacity>
+                {isExpanded && (
+                  <View
+                    style={{
+                      backgroundColor: '#f2f2f2',
+                      marginTop: 5,
+                      borderRadius: 6,
+                      padding: 6,
+                      borderWidth: 1,
+                      borderColor: '#ddd',
+                    }}
+                  >
+                    <Text style={{ fontSize: 11, fontFamily: 'monospace', color: '#444' }}>
+                      {JSON.stringify(result, null, 2)}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            );
+          })}
+
           {predictions.length === 0 && (
             <Text style={styles.noPredictions}>
               Henüz prediction yok. Video başlatın!
@@ -346,9 +418,16 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 8,
     borderRadius: 8,
-    borderLeftWidth: 3,
+    borderLeftWidth: 5, // biraz kalınlaştırdım
     borderLeftColor: '#007AFF',
+    // backgroundColor: '#f8f9fa', // bunu yukarıdan override ediyoruz
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    elevation: 2,
   },
+  
   predictionTime: {
     fontSize: 12,
     color: '#666',
