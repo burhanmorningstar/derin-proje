@@ -52,7 +52,7 @@ cd mobil
 npm install
 ```
 
-2. Update the API URL in `src/config/config.js` to match your backend server.
+2. Update the API URL in `app.js>API_ENDPOINT` to match your backend server.
 
 3. Run the app:
 ```bash
