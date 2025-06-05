@@ -6,8 +6,15 @@ A real-time violence detection system using deep learning, consisting of a React
 
 ```
 .
-├── mobil/                 # React Native mobile application
-│   └── App.js            # Main application file
+├── mobil/                # React Native mobile application
+│   ├── App.js           # Main application file
+│   ├── src/             # Source directory
+│   │   ├── components/  # Reusable UI components
+│   │   ├── screens/     # Screen components
+│   │   ├── navigation/  # Navigation configuration
+│   │   ├── services/    # API and business services
+│   │   ├── utils/       # Utility functions
+│   │   └── constants/   # App constants
 ├── backend/              # Python Flask backend
 │   ├── services/         # Business logic services
 │   ├── config.py         # Configuration
@@ -52,7 +59,7 @@ cd mobil
 npm install
 ```
 
-2. Update the API URL in `app.js>API_ENDPOINT` to match your backend server.
+2. Update the API URL in `src/constants/config.js` to match your backend server.
 
 3. Run the app:
 ```bash
